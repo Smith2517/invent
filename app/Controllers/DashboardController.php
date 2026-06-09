@@ -40,7 +40,7 @@ class DashboardController extends Controller
         ");
         $assetsByStatus = $stmt->fetchAll();
 
-        // 6. Bienes por Grupo Presupuestario
+        // 6. Bienes por Grupo Genérico (Top 5 con mayor volumen)
         $stmt = $db->query("
             SELECT g.description as label, COUNT(a.id) as count 
             FROM `assets` a
@@ -48,11 +48,24 @@ class DashboardController extends Controller
             JOIN `groups` g ON s.group_id = g.id
             WHERE a.deleted_at IS NULL
             GROUP BY g.id
+            ORDER BY count DESC
             LIMIT 5
         ");
         $assetsByGroup = $stmt->fetchAll();
 
-        // 7. Altas mensuales de bienes en el último año
+        // 7. Bienes por Oficina / Área (Top 5 con mayor volumen)
+        $stmt = $db->query("
+            SELECT o.name as label, COUNT(a.id) as count 
+            FROM `assets` a
+            JOIN `offices` o ON a.office_id = o.id
+            WHERE a.deleted_at IS NULL
+            GROUP BY o.id
+            ORDER BY count DESC
+            LIMIT 5
+        ");
+        $assetsByOffice = $stmt->fetchAll();
+
+        // 8. Altas mensuales de bienes en el último año
         $stmt = $db->query("
             SELECT MONTHNAME(`entry_date`) as month, COUNT(*) as count 
             FROM `assets` 
@@ -61,16 +74,6 @@ class DashboardController extends Controller
             ORDER BY `entry_date`
         ");
         $monthlyEntries = $stmt->fetchAll();
-
-        // 8. Registro de Actividades Recientes (Auditoría)
-        $stmt = $db->query("
-            SELECT l.*, u.full_name as user_fullname 
-            FROM `audit_logs` l
-            LEFT JOIN `users` u ON l.user_id = u.id
-            ORDER BY l.created_at DESC
-            LIMIT 5
-        ");
-        $recentLogs = $stmt->fetchAll();
 
         $this->render('dashboard/index', [
             'title' => 'Dashboard Analítico',
@@ -82,8 +85,8 @@ class DashboardController extends Controller
             ],
             'assetsByStatus' => $assetsByStatus,
             'assetsByGroup' => $assetsByGroup,
-            'monthlyEntries' => $monthlyEntries,
-            'recentLogs' => $recentLogs
+            'assetsByOffice' => $assetsByOffice,
+            'monthlyEntries' => $monthlyEntries
         ]);
     }
 }

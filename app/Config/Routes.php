@@ -24,6 +24,12 @@ $router->get('/forbidden', 'AuthController@forbidden');
 $router->get('/', 'DashboardController@index', ['DASHBOARD_VIEW'], $auth);
 
 // -----------------------------------------------------
+// Reportes Analíticos Detallados
+// -----------------------------------------------------
+$router->get('/reports', 'ReportController@index', ['REPORT_VIEW'], $auth);
+$router->post('/api/reports/buscar', 'ReportController@ajaxSearch', ['REPORT_VIEW'], $auth);
+
+// -----------------------------------------------------
 // Rutas de Bienes Patrimoniales (Cambiado de /assets a /bienes para evitar conflicto de carpeta física)
 // -----------------------------------------------------
 $router->get('/bienes', 'AssetController@index', ['ASSET_VIEW'], $auth);

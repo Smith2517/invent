@@ -18,14 +18,31 @@
     <link href="<?= BASE_URL ?>/public/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
+    <script>
+        // Aplicar estado colapsado de inmediato para evitar parpadeos
+        if (localStorage.getItem('sidebar-collapsed') === 'true') {
+            document.body.classList.add('collapsed-sidebar');
+        }
+    </script>
 
     <!-- Incluir Barra de Navegación Lateral -->
     <?php include ROOT_DIR . '/app/Views/components/sidebar.php'; ?>
 
+    <!-- Fondo Oscuro para Menú Móvil -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Encabezado Principal -->
     <header class="main-header">
         <div class="d-flex align-items-center">
-            <h5 class="fw-bold text-dark mb-0"><?= $title ?? 'Inicio' ?></h5>
+            <!-- Botón Colapsar/Expandir en Escritorio -->
+            <button class="btn btn-link text-dark p-0 me-3 d-none d-md-inline-block shadow-none" id="sidebarCollapseBtn" title="Contraer/Expandir menú">
+                <i class="fa-solid fa-bars fa-lg"></i>
+            </button>
+            <!-- Botón Abrir Menú en Móvil -->
+            <button class="btn btn-link text-dark p-0 me-3 d-md-none shadow-none" id="mobileSidebarToggle" title="Abrir menú">
+                <i class="fa-solid fa-bars fa-lg"></i>
+            </button>
+            <h5 class="fw-bold text-dark mb-0 page-layout-title"><?= $title ?? 'Inicio' ?></h5>
         </div>
 
         <div class="header-actions">
@@ -93,6 +110,33 @@
         };
 
         $(document).ready(function() {
+            // Control de colapso de Sidebar (Escritorio)
+            $('#sidebarCollapseBtn').on('click', function(e) {
+                e.preventDefault();
+                $('body').toggleClass('collapsed-sidebar');
+                const isCollapsed = $('body').hasClass('collapsed-sidebar');
+                localStorage.setItem('sidebar-collapsed', isCollapsed);
+            });
+
+            // Control de apertura de Sidebar (Móvil)
+            $('#mobileSidebarToggle').on('click', function(e) {
+                e.preventDefault();
+                $('.sidebar').addClass('mobile-show');
+                $('#sidebarOverlay').addClass('active');
+            });
+
+            // Control de cierre de Sidebar (Móvil) al hacer clic en el overlay
+            $('#sidebarOverlay').on('click', function(e) {
+                $('.sidebar').removeClass('mobile-show');
+                $(this).removeClass('active');
+            });
+
+            // Cerrar menú móvil al hacer clic en cualquier enlace
+            $('.sidebar-link').on('click', function() {
+                $('.sidebar').removeClass('mobile-show');
+                $('#sidebarOverlay').removeClass('active');
+            });
+
             <?php if (\App\Core\Session::hasFlash('success')): ?>
                 Swal.fire({
                     icon: 'success',

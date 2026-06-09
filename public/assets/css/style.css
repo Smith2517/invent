@@ -272,3 +272,154 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+/* ==========================================================================
+   DISEÑO RESPONSIVO Y SIDEBAR COLAPSABLE
+   ========================================================================== */
+
+/* Transiciones Suaves Globales de Layout */
+.sidebar, .main-header, .main-content {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Fondo Oscuro / Overlay para Menú Móvil */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(17, 27, 33, 0.45);
+    z-index: 999;
+    display: none;
+    backdrop-filter: blur(3px);
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* Evitar scroll del body cuando el overlay está activo */
+body.mobile-sidebar-open {
+    overflow: hidden;
+}
+
+/* --- ESTADO COLAPSADO EN ESCRITORIO --- */
+body.collapsed-sidebar {
+    --sidebar-width: 70px;
+}
+
+body.collapsed-sidebar .sidebar {
+    width: var(--sidebar-width);
+}
+
+body.collapsed-sidebar .sidebar-logo {
+    justify-content: center !important;
+    padding: 15px 0 !important;
+}
+
+body.collapsed-sidebar .logo-text,
+body.collapsed-sidebar .sidebar-menu-title,
+body.collapsed-sidebar .sidebar-link span,
+body.collapsed-sidebar .sidebar .p-3.border-top span {
+    display: none !important;
+}
+
+body.collapsed-sidebar .sidebar-menu {
+    padding: 15px 8px;
+}
+
+body.collapsed-sidebar .sidebar-link {
+    justify-content: center;
+    padding: 12px 0;
+    margin-bottom: 8px;
+}
+
+body.collapsed-sidebar .sidebar-link i {
+    margin-right: 0 !important;
+    font-size: 1.25rem;
+}
+
+body.collapsed-sidebar .sidebar .p-3.border-top {
+    padding: 15px 0 !important;
+    text-align: center;
+}
+
+body.collapsed-sidebar .sidebar .p-3.border-top a {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+/* --- ADAPTACIÓN PARA MÓVILES Y TABLETS (Responsividad) --- */
+@media (max-width: 991.98px) {
+    :root {
+        --sidebar-width: 260px;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Ocultar barra lateral por defecto */
+    .sidebar {
+        left: calc(-1 * var(--sidebar-width));
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Desplegar barra lateral */
+    .sidebar.mobile-show {
+        left: 0;
+    }
+
+    /* Anular márgenes izquierdos */
+    .main-header {
+        margin-left: 0 !important;
+        padding: 0 20px;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 20px 15px;
+        min-height: calc(100vh - 70px);
+    }
+
+    /* Ajuste en tarjetas y márgenes */
+    .card-body {
+        padding: 18px;
+    }
+
+    .card-header {
+        padding: 15px 18px;
+    }
+}
+
+/* Ajustes adicionales para pantallas extra pequeñas (Teléfonos) */
+@media (max-width: 575.98px) {
+    .main-header {
+        padding: 0 15px;
+    }
+
+    .page-layout-title {
+        font-size: 1rem !important;
+    }
+
+    .user-profile {
+        gap: 5px;
+    }
+
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* Ajustes generales de tablas */
+    .table-responsive {
+        border: 0;
+        margin-bottom: 0;
+    }
+
+    /* Asegurar que las DataTables ocupen 100% de la tarjeta */
+    .dataTables_wrapper .row > div {
+        padding: 0 !important;
+    }
+}

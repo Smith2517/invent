@@ -1,3 +1,6 @@
+<!-- Importar Chart.js para inicialización de gráficos -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <!-- Fila de Banner de Bienvenida -->
 <div class="row mb-4">
     <div class="col-12">
@@ -6,14 +9,14 @@
                 <div class="row align-items-center position-relative z-index-1">
                     <div class="col-lg-7">
                         <h2 class="fw-bold mb-2">¡Hola, <?= htmlspecialchars($currentUserFullName) ?>!</h2>
-                        <p class="mb-4 opacity-75">Bienvenido al panel analítico de control patrimonial. Monitorea altas, bajas, reasignaciones y estados físicos en tiempo real.</p>
-                        <a href="<?= BASE_URL ?>/bienes/crear" class="btn btn-light text-primary fw-medium px-4 py-2 rounded-3">
-                            <i class="fa-solid fa-plus me-2"></i> Registrar Nuevo Bien
+                        <p class="mb-4 opacity-75">Bienvenido al panel analítico de control patrimonial de EPS RIOJA. Monitorea estados físicos, clasificaciones y ubicaciones en tiempo real.</p>
+                        <a href="<?= BASE_URL ?>/bienes" class="btn btn-light text-primary fw-medium px-4 py-2 rounded-3">
+                            <i class="fa-solid fa-laptop me-2"></i> Ir a Bienes Patrimoniales
                         </a>
                     </div>
                 </div>
             </div>
-            <!-- Círculos decorativos de fondo estilo Flexy -->
+            <!-- Círculos decorativos de fondo -->
             <div class="position-absolute end-0 bottom-0 opacity-10 translate-middle-y me-5 d-none d-lg-block">
                 <i class="fa-solid fa-boxes-stacked" style="font-size: 10rem;"></i>
             </div>
@@ -84,7 +87,7 @@
     </div>
 </div>
 
-<!-- Fila de Gráficos -->
+<!-- Fila de Gráficos de Estado y Tiempo -->
 <div class="row mb-4">
     <!-- Gráfico de Estado Físico -->
     <div class="col-lg-5">
@@ -111,7 +114,7 @@
     <div class="col-lg-7">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header border-0 pb-0">
-                <h6 class="fw-bold text-dark m-0">Registro de Bienes por Mes</h6>
+                <h6 class="fw-bold text-dark m-0">Registro de Bienes por Mes (Último Año)</h6>
             </div>
             <div class="card-body d-flex flex-column justify-content-center">
                 <?php if (empty($monthlyEntries)): ?>
@@ -129,93 +132,74 @@
     </div>
 </div>
 
-<!-- Fila Inferior: Bitácora y Accesos Rápidos -->
+<!-- Fila de Distribución por Oficina y Grupos -->
 <div class="row">
-    <!-- Últimas Actividades (Bitácora de Auditoría) -->
-    <div class="col-lg-8">
-        <div class="card border-0 shadow-sm">
+    <!-- Bienes por Oficina/Área -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
             <div class="card-header border-0 pb-0">
-                <h6 class="fw-bold text-dark m-0">Bitácora de Auditoría Reciente</h6>
+                <h6 class="fw-bold text-dark m-0"><i class="fa-solid fa-building text-primary me-2"></i> Distribución por Oficinas / Áreas</h6>
+                <p class="text-muted small m-0">Top 5 áreas con mayor cantidad de bienes bajo custodia.</p>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Usuario</th>
-                                <th>Acción</th>
-                                <th>Módulo</th>
-                                <th>Fecha/Hora</th>
-                                <th>IP</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($recentLogs)): ?>
-                                <tr>
-                                    <td colspan="5" class="text-center py-4 text-muted small">
-                                        No hay registros de actividad recientes.
-                                    </td>
-                                </tr>
-                            <?php else: ?>
-                                <?php foreach ($recentLogs as $log): ?>
-                                    <tr>
-                                        <td>
-                                            <div class="fw-semibold text-dark"><?= htmlspecialchars($log['user_fullname'] ?? 'Sistema') ?></div>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-opacity-10 py-1.5 px-2.5 rounded-pill fs-8
-                                                <?php
-                                                    if ($log['action'] === 'CREATE') echo 'bg-success text-success';
-                                                    elseif ($log['action'] === 'UPDATE') echo 'bg-primary text-primary';
-                                                    elseif ($log['action'] === 'DELETE') echo 'bg-danger text-danger';
-                                                    else echo 'bg-secondary text-secondary';
-                                                ?>">
-                                                <?= $log['action'] ?>
-                                            </span>
-                                        </td>
-                                        <td><?= htmlspecialchars($log['module']) ?></td>
-                                        <td class="small text-muted"><?= date('d/m/Y H:i', strtotime($log['created_at'])) ?></td>
-                                        <td class="small font-monospace"><?= htmlspecialchars($log['ip_address']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
+                <?php if (empty($assetsByOffice)): ?>
+                    <div class="text-center py-5 text-muted small">
+                        <i class="fa-solid fa-building-circle-exclamation fa-2x text-muted opacity-50 mb-2"></i>
+                        <div>Sin registros de oficinas</div>
+                    </div>
+                <?php else: ?>
+                    <div class="d-flex flex-column gap-3">
+                        <?php foreach ($assetsByOffice as $office): ?>
+                            <?php 
+                            $pct = ($stats['total_assets'] > 0) ? round(($office['count'] / $stats['total_assets']) * 100, 1) : 0;
+                            ?>
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-semibold text-dark small text-truncate" style="max-width: 70%;" title="<?= htmlspecialchars($office['label']) ?>"><?= htmlspecialchars($office['label']) ?></span>
+                                    <span class="text-muted small fw-bold"><?= $office['count'] ?> bienes (<?= $pct ?>%)</span>
+                                </div>
+                                <div class="progress rounded-pill" style="height: 6px;">
+                                    <div class="progress-bar bg-primary rounded-pill" role="progressbar" style="width: <?= $pct ?>%" aria-valuenow="<?= $pct ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
-    <!-- Panel de Accesos Rápidos -->
-    <div class="col-lg-4">
-        <div class="card border-0 shadow-sm">
+    <!-- Bienes por Grupo Genérico -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
             <div class="card-header border-0 pb-0">
-                <h6 class="fw-bold text-dark m-0">Enlaces Rápidos</h6>
+                <h6 class="fw-bold text-dark m-0"><i class="fa-solid fa-folder-tree text-success me-2"></i> Distribución por Grupos Genéricos</h6>
+                <p class="text-muted small m-0">Top 5 grupos principales de bienes patrimoniales.</p>
             </div>
             <div class="card-body">
-                <div class="d-grid gap-3">
-                    <a href="<?= BASE_URL ?>/bienes" class="btn btn-light text-start py-3 px-3 rounded-3 d-flex align-items-center justify-content-between shadow-xs">
-                        <div>
-                            <div class="fw-bold text-dark">Gestión de Bienes</div>
-                            <span class="text-muted small fs-7">Ver, editar y eliminar bienes</span>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-primary"></i>
-                    </a>
-                    <a href="<?= BASE_URL ?>/inventories" class="btn btn-light text-start py-3 px-3 rounded-3 d-flex align-items-center justify-content-between shadow-xs">
-                        <div>
-                            <div class="fw-bold text-dark">Inventario Físico</div>
-                            <span class="text-muted small fs-7">Verificación directa de bienes patrimoniales</span>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-success"></i>
-                    </a>
-                    <a href="<?= BASE_URL ?>/roles" class="btn btn-light text-start py-3 px-3 rounded-3 d-flex align-items-center justify-content-between shadow-xs">
-                        <div>
-                            <div class="fw-bold text-dark">Roles del Sistema</div>
-                            <span class="text-muted small fs-7">Administrar niveles de acceso</span>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-warning"></i>
-                    </a>
-                </div>
+                <?php if (empty($assetsByGroup)): ?>
+                    <div class="text-center py-5 text-muted small">
+                        <i class="fa-solid fa-folder-open fa-2x text-muted opacity-50 mb-2"></i>
+                        <div>Sin registros de grupos genéricos</div>
+                    </div>
+                <?php else: ?>
+                    <div class="d-flex flex-column gap-3">
+                        <?php foreach ($assetsByGroup as $group): ?>
+                            <?php 
+                            $pct = ($stats['total_assets'] > 0) ? round(($group['count'] / $stats['total_assets']) * 100, 1) : 0;
+                            ?>
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-semibold text-dark small text-truncate" style="max-width: 70%;" title="<?= htmlspecialchars($group['label']) ?>"><?= htmlspecialchars($group['label']) ?></span>
+                                    <span class="text-muted small fw-bold"><?= $group['count'] ?> bienes (<?= $pct ?>%)</span>
+                                </div>
+                                <div class="progress rounded-pill" style="height: 6px;">
+                                    <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: <?= $pct ?>%" aria-valuenow="<?= $pct ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -236,7 +220,7 @@
                 labels: statusData.map(item => item.label),
                 datasets: [{
                     data: statusData.map(item => item.count),
-                    backgroundColor: ['#198754', '#0d6efd', '#ffc107', '#dc3545'],
+                    backgroundColor: ['#198754', '#0d6efd', '#ffc107', '#dc3545', '#6c757d'],
                     borderWidth: 0
                 }]
             },

@@ -21,12 +21,12 @@ function hasPerm($code, $permissions) {
 }
 ?>
 <aside class="sidebar">
-    <div class="sidebar-logo" style="flex-direction: column; align-items: flex-start; padding: 15px 20px;">
-        <div class="d-flex align-items-center">
-            <i class="fa-solid fa-boxes-stacked fa-lg me-2" style="color: var(--primary-color);"></i>
-            <span style="font-size: 1.1rem; font-weight: 700; color: #111; letter-spacing: 0.5px;">EPS RIOJA</span>
+    <div class="sidebar-logo d-flex align-items-center" style="padding: 15px 20px; border-bottom: 1px solid var(--border-color); height: 70px;">
+        <i class="fa-solid fa-boxes-stacked fa-lg logo-icon" style="color: var(--primary-color); min-width: 24px;"></i>
+        <div class="d-flex flex-column align-items-start logo-text ms-2" style="flex-grow: 1;">
+            <span style="font-size: 1.1rem; font-weight: 700; color: #111; letter-spacing: 0.5px; line-height: 1.2;">EPS RIOJA</span>
+            <span class="text-muted fw-semibold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.8px; margin-top: 2px;">Inventario</span>
         </div>
-        <span class="text-muted fw-semibold text-uppercase mt-1" style="font-size: 0.65rem; letter-spacing: 0.8px;">Inventario General</span>
     </div>
     
     <nav class="sidebar-menu">
@@ -53,6 +53,13 @@ function hasPerm($code, $permissions) {
                 <a href="<?= BASE_URL ?>/inventories" class="sidebar-link <?= isActive('/inventories', $currentUri) ?>">
                     <i class="fa-solid fa-clipboard-check"></i>
                     <span>Inventario Físico</span>
+                </a>
+            <?php endif; ?>
+            
+            <?php if (hasPerm('REPORT_VIEW', $permissions)): ?>
+                <a href="<?= BASE_URL ?>/reports" class="sidebar-link <?= isActive('/reports', $currentUri) ?>">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Reportes Analíticos</span>
                 </a>
             <?php endif; ?>
         <?php endif; ?>
