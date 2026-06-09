@@ -1,0 +1,274 @@
+/* ==========================================================================
+   SISTEMA DE INVENTARIO PATRIMONIAL - SISTEMA DE DISEÑO (ESTILO FLEXY)
+   ========================================================================== */
+
+:root {
+    --primary-color: #0d6efd;
+    --primary-hover: #0b5ed7;
+    --bg-canvas: #f3f6f9;
+    --bg-card: #ffffff;
+    --text-primary: #3e5569;
+    --text-muted: #a1aab2;
+    --border-color: #e9ecef;
+    --sidebar-width: 260px;
+    --sidebar-active-bg: #0d6efd;
+    --sidebar-active-text: #ffffff;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    overflow-x: hidden;
+}
+
+/* --- Estilos del Sidebar --- */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.sidebar-logo {
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-logo i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+.sidebar-logo span {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #111;
+}
+
+.sidebar-menu {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px 15px;
+}
+
+.sidebar-menu-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    margin-top: 20px;
+    padding-left: 10px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+    transition: color 0.2s ease;
+}
+
+.sidebar-link:hover {
+    background-color: #f8f9fa;
+    color: var(--primary-color);
+}
+
+.sidebar-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-text);
+}
+
+.sidebar-link.active i {
+    color: var(--sidebar-active-text);
+}
+
+/* --- Estilos del Header / Navbar Superior --- */
+.main-header {
+    height: 70px;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    margin-left: var(--sidebar-width);
+}
+
+.header-search {
+    position: relative;
+    max-width: 300px;
+}
+
+.header-search input {
+    background-color: #f8f9fa;
+    border: 0;
+    border-radius: 30px;
+    padding: 8px 15px 8px 40px;
+    font-size: 0.85rem;
+    width: 100%;
+}
+
+.header-search i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-icon-btn {
+    background: none;
+    border: 0;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    position: relative;
+    cursor: pointer;
+}
+
+.header-icon-btn .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 0.6rem;
+    padding: 3px 5px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+}
+
+/* --- Contenedor Principal de Contenido --- */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 30px;
+    min-height: calc(100vh - 70px);
+}
+
+/* --- Tarjetas Estilo Flexy --- */
+.card {
+    background-color: var(--bg-card);
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 7px 30px 0 rgba(90, 114, 123, 0.11);
+    margin-bottom: 24px;
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px 24px;
+}
+
+.card-body {
+    padding: 24px;
+}
+
+/* --- Widgets del Dashboard --- */
+.kpi-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kpi-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* --- Personalizaciones Generales --- */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.table th {
+    font-weight: 600;
+    color: #333;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.table td {
+    vertical-align: middle;
+    color: var(--text-primary);
+}
+
+/* --- Overlay de Carga (Loader Global) --- */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+    transition: all 0.3s ease;
+}
+
+.loading-overlay .spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
